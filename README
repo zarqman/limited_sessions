@@ -3,7 +3,7 @@ LimitedSessions
 Copyright 2007 t.e.morgan.
 License: MIT
 
-Updates/info: http://iprog.com/project/limitedsessions
+Updates/info: http://iprog.com/project/limited_sessions
 Contact: tm@iprog.com
 
 A plugin to modify the standard database-backed sessions behavior to be more
