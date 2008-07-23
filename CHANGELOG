@@ -1,1 +1,6 @@
+* 2008-jul-23 - update to improve rails 2.1 compatibility 
+  
+  - disable partial-updates for the session table
+    (thanks to eilonon erkki for bringing the problem to my attention)
+  
 * 2007-sep-06 - initial release

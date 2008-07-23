@@ -1,11 +1,13 @@
 # LimitedSessions
-# (c) 2007 t.e.morgan
+# (c) 2007-2008 t.e.morgan
 # made available under the MIT license
 
 class CGI
   class Session
     class ActiveRecordStore
       class Session < ActiveRecord::Base
+        self.partial_updates = false if respond_to? :partial_updates=
+        
         cattr_accessor :recent_activity_limit, :hard_session_limit, :auto_clean_sessions
         self.recent_activity_limit = 2.hours  # required
         self.hard_session_limit = nil         # eg: 24.hours
