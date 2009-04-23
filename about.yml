@@ -3,5 +3,5 @@ summary: 'limited_sessions: cause sessions to expire or limit them to originatin
 homepage: http://iprog.com/project/limited_sessions
 plugin: http://svn.iprog.com/projects/rails/plugins/limited_sessions
 license: MIT
-version: 0.20080723
-rails_version: 1.2+
+version: 0.20090422
+rails_version: 2.3+

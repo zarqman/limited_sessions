@@ -1,3 +1,12 @@
+* 2009-apr-22 - update to support rails 2.3
+
+  - Rails 2.3 changed the internal session code substantially. This new
+    version now supports rails 2.3. Note that is no longer supports any
+    version of rails prior to 2.3 -- see the README for where to find
+    an older version of this plugin for rails 2.2 and earlier. 
+  - CONFIGURATION OPTIONS HAVE CHANGED. This is required by the new
+    support for rails 2.3. See the README for more information.
+
 * 2008-jul-23 - update to improve rails 2.1 compatibility 
   
   - disable partial-updates for the session table
