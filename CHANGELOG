@@ -1,3 +1,15 @@
+* 2010-jul-20 - IPv6, replay attack mitigation, more non-AR support
+
+  - IPv6 now works for subnet matching.
+  - New options to configure the allowed subnet size (both IPv4 and 
+    IPv6) added.
+  - Plugin now enhances reset_session to clear old session data from
+    the DB; this prevents session_id replay attacks when using 
+    DB-backed session storage.
+  - Session activity and hard limits now work with non-ActiveRecord
+    session stores. Configuration is done differently depending on 
+    which session store is in use.
+
 * 2009-apr-22 - update to support rails 2.3
 
   - Rails 2.3 changed the internal session code substantially. This new

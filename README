@@ -1,43 +1,53 @@
 LimitedSessions
 ===============
-Copyright 2007-2009 t.e.morgan.
+Copyright 2007-2010 t.e.morgan.
 License: MIT
 
 Updates/info: http://iprog.com/project/limited_sessions
 Contact: tm@iprog.com
 
-A plugin to modify the standard database-backed sessions behavior to be more
-intelligent. 
+A plugin to enhance Rails' sessions behavior to be more intelligent. Includes
+some enhances for all session stores and some that are limited to ActiveRecord-
+backed storage.
 
 
 Notes on Rails versions:
-  Please note that as of this release, Rails 2.3+ is required. For use with
+  Please note that as of this release, Rails 2.3+ is required.  For use with
   Rails <= 2.2.x, see instead: 
   http://svn.iprog.com/projects/rails/plugins/limited_sessions-2.2
 
 Upgrading from a pre-Rails 2.3 version:
-  The configuration options have changed. If you've been using the defaults
-  then no action is required. If you've been setting values, then you must
-  make changes. See the Configuration section below on the new names for the
+  The configuration options have changed.  If you've been using the defaults
+  then no action is required.  If you've been setting values, then you must
+  make changes.  See the Configuration section below on the new names for the
   settings.
 
 
 Features:
-  * Configurable session expiry time (eg: 2 hours from last page access)
-  * Optional hard limit regardless of last page access (eg: 24 hours)
-  * Optional ability to tie session to an IP or /24 subnet
-  * Optional auto-cleaning of expired sessions
+  * For all session stores:
+    * Optional ability to tie session to an IP or a subnet
+    * Both IPv4 and IPv6 are supported with configurable subnet sizes for each
+    * Configurable session expiry time (eg: 2 hours from last page access)
+    * Optional hard limit regardless of last page access (eg: 24 hours)
+  * For nearly all session stores (excluding the CookieStore):
+    * Upon session reset, erase old session values from the DB -- prevents
+      session_id replay attacks
+  * For ActiveRecord-backed session stores:
+    * DB-based handling of session expiry (activity and hard limits) instead of
+      by session paramters
+    * Optional auto-cleaning of expired sessions
+
   
 Requirements:
   * Rails 2.3+
-  * A functional Rails app that uses the standard ActiveRecord::SessionStore
-    session store (ActionController::Base.session_store = :active_record_store)
-  * Ensure your sessions table has an `updated_at` column
-  * If using hard session limits, a `created_at` column is needed too
+  * Utilizing Rails' sessions support
+  * For ActiveRecord session enhancements:
+    * Must be using the standard ActiveRecord::SessionStore
+      (ActionController::Base.session_store = :active_record_store)
+    * Ensure your sessions table has an `updated_at` column
+    * If using hard session limits, a `created_at` column is needed too
   
 Limitations:
-  * IP restrictions are not IPv6 enabled for subnets (although it should work
-    for a full match)
   * IP restrictions may or may not be sufficient or even work if a proxy is
     involved on the client side
 
@@ -52,30 +62,47 @@ Configuration:
   the end of config/environment.rb (or the individual <environment>.rb files
   if that's preferred).
   
+  ActionController::Request.recent_activity_limit = 2.hours
   ActiveRecord::SessionStore::Session.recent_activity_limit = 2.hours
     This will expire sessions after the given period of time.  This is managed
     on the server side and if the user closes their browser, the session will
-    also be gone.  Default is 2 hours.
+    also be gone.  For non-ActiveRecord sessions (Cookie, Memcache, Redis, 
+    etc.), use the first variable.  For ActiveRecord, use the second.  Default
+    for non-AR is nil (disabled); default for AR is 2 hours.  For AR, requires
+    an `updated_at` column in the session table.  Non-AR stores add a session
+    variable, :last_visit.  Some datastores, such as Memcache and Redis, manage
+    their own expiry so this is unneeded.  May not be disabled (nil) when using
+    AR.
   
+  ActionController::Request.hard_session_limit = 24.hours
   ActiveRecord::SessionStore::Session.hard_session_limit = 24.hours
     Sessions can also be forcefully expired without regard to the last
     activity.  So if this is set to 24 hours and the above is two hours, the 
     session will be terminated if a) the user has been inactive for more than
     two hours OR b) it has been more than 24 hours since the session began.
-    Default is disabled (nil).  Requires a `created_at` column in the session
-    table.
+    Like the previous setting, use the first for non-AR and the second for AR.
+    Default in both cases is disabled (nil).  For AR, requires a `created_at` 
+    column in the session table. Non-AR stores add a session variable, 
+    :first_visit.
   
   ActiveRecord::SessionStore::Session.auto_clean_sessions = 1000
     Does a random test to see if the app should delete all expired sessions
     now.  The odds are 1 in whatever value is provided here.  0 will disable
-    this option.  Default is 1000.  A busy site may want 10000 or higher.
+    this option.  Default is 1000.  A busy site may want 10000 or higher.  Only
+    applicable to ActiveRecord-based session stores.
     
   ActionController::Request.ip_restriction = :subnet
-    If set to :subnet, will compare the first three quads of the IPv4 address
-    for a match.  If set to :exact, will compare the full IP address (which
-    should also work for IPv6).  If no match, the session will be reset.
-    Default is :none.  Stores the IP match data in the session store as 
-    session[:ip].
+    If set to :exact, will compare the full IP address.  If set to :subnet, 
+    will match a little more broadly based on the configured subnet size (see 
+    next options).  If no match, the session will be reset.  Defaults to :none,
+    which disables IP restriction checking.  Stores the IP match data in the 
+    session store as session[:ip].  Works with all session stores.
+
+  ActionController::Request.ipv4_mask = 24
+  ActionController::Request.ipv6_mask = 64
+    When .ip_restriction == :subnet, this configures the size of the subnet
+    that's still considered a match.  Defaults (IPv4: /24; IPv6: /64) should
+    be suitable for most applications. 
 
 
 Other Notes:
@@ -83,8 +110,10 @@ Other Notes:
   `session_id`.
 
   I'm sure there are better ways to do some of what's here, but this seems to
-  work.  It has been tested with Rails 2.3.2; PostgreSQL 8.1 and 8.3 and MySQL
-  5.0. If you find a bug, have a suggestion, or just want to tell me that it
+  work.  Recent updates have been tested with Rails 2.3; PostgreSQL 8.3 and 
+  8.4; and Redis (via the redis and redis-session-store gems). Previously it
+  has been tested with PostgreSQL 8.1 and MySQL 5.0; those should still work 
+  too.  If you find a bug, have a suggestion, or just want to tell me that it
   works, I'd love to hear from you.  Thanks for checking limited_sessions out!
   
       --t (tm@iprog.com; http://iprog.com/)
