@@ -77,7 +77,8 @@ module ActionController
       # also resets the session id and that seems to cause some really strange
       # behavior
       if session_old_version[:ip]
-        case @@ip_restriction
+        # setting :ip_restriction allows for a per-session override
+        case session_old_version[:ip_restriction] || @@ip_restriction
         when :exact
           unless session_old_version[:ip] == remote_ip
             ActionController::Base.logger.error "Session violation: IP #{session_old_version[:ip]} expected; #{remote_ip} received"
@@ -128,7 +129,11 @@ module ActionController
         ss = klass.new(:no_app, ActionController::Base.session_options)
         ss.send :set_session, @env, old_id, {}
       end
-      reset_session_old_version
+      # fix a bug in 2.3.11 that causes reset_session to fail on occasion
+      #   should be included in 2.3.12 (and 3.0+) [after which, revert to reset_session_old_version]
+      session.destroy if session and session.respond_to?(:destroy)
+      self.session = {}
+      # reset_session_old_version
     end
     
   end
