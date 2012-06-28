@@ -1,3 +1,17 @@
+* 2012-jun-25 - Rails 3 and generic Rack compatibility; much simplified
+
+  - LimitedSessions has been broken up into two parts:
+    - Rack-compatible middleware that handles session time limits. This
+      *should* work for all session stores. Just requires Rack, not 
+      necessarily Rails.
+    - Rails 3 specific enhancement to the ActiveRecord Session Store
+      that also cleans up stale session records.
+  - Rails 3.2 (maybe 3.0 and 3.1; untested) compatibility. No longer
+    compatible with Rails 2--use previous versions.
+  - All IP matching and restrictions have been removed. In short, dual-
+    stack environments (IPv4+IPv6) have a tendency to bounce between v4
+    and v6 at times. This causes sessions to be aborted regularly.
+
 * 2010-jul-20 - IPv6, replay attack mitigation, more non-AR support
 
   - IPv6 now works for subnet matching.
