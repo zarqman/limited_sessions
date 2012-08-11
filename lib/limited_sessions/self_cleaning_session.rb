@@ -18,10 +18,10 @@ module LimitedSessions
     self.self_clean_sessions  = 1000    # 0 disables
 
     scope :active_session, lambda {
-      recent_activity ? where("updated_at > ?", Time.current - recent_activity) : []
+      where("updated_at > ?", Time.current - recent_activity) if recent_activity
     }
     scope :current_session, lambda {
-      max_session ? where("created_at > ?", Time.current - max_session) : []
+      where("created_at > ?", Time.current - max_session) if max_session
     }
 
     class << self
