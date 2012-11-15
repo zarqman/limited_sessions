@@ -1,3 +1,8 @@
+* 2012-nov-14 - Merge changes from ejdraper
+
+  - Lower Rack requirement to v1.2.5+ for Rails 3.0 compatibility
+  - Fix an issue with scope chaining
+
 * 2012-jun-25 - Rails 3 and generic Rack compatibility; much simplified
 
   - LimitedSessions has been broken up into two parts:
