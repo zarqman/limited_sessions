@@ -1,3 +1,13 @@
+* 2013-jun-15 - Support for Rails 4
+
+  - v4.0.0 - Rails 4 compatibility. Use v3.x.x for Rails 3 apps.
+  - For non-ActiveRecord session stores, no change is required from the
+    previous version.
+  - For ActiveRecord session stores, you must add the 
+    'activerecord-session_store' gem to your Gemfile and it must be
+    above limited_sessions so that it will be auto-detected properly.
+    This is the only change required.
+
 * 2012-nov-14 - Merge changes from ejdraper
 
   - Lower Rack requirement to v1.2.5+ for Rails 3.0 compatibility

@@ -1,6 +1,6 @@
 LimitedSessions
 ===============
-Copyright 2007-2012 t.e.morgan.
+Copyright 2007-2013 t.e.morgan.
 License: MIT
 
 Updates/info: http://iprog.com/projects#limited_sessions
@@ -10,33 +10,32 @@ Contact: tm@iprog.com
 
 LimitedSessions provides two distinct features, each in a separate part:
   * Rack-compatible middleware that expires sessions based on inactivity or
-    maximum session length. This works with Rails 3 just fine.
-  * Rails 3 extension to the ActiveRecord Session Store to auto-cleanup stale
-    session records.
+    maximum session length. This works with Rails 4 just fine.
+  * Rails 4 extension to the (now separate) ActiveRecord Session Store to
+    auto-cleanup stale session records.
 
 
 Notes on Rails and Rack versions:
   The middleware should be compatible with any framework using a recent
-  version of Rack. It was tested with Rack 1.4 and Rails 3.2.
+  version of Rack. It was tested with Rack 1.5 and Rails 4.0.
   
-  The ActiveRecord Session Store extension requires Rails 3 (and was also
-  tested with Rails 3.2).
-  
-  Versions compatible with Rails 2.3 and Rails 2.2/prior can be found at:
-  https://github.com/zarqman/limited_sessions/tree/v2.3 and
-  https://github.com/zarqman/limited_sessions/tree/v2.2
+  The ActiveRecord Session Store extension requires Rails 4 and the now
+  separate activerecord-session_store gem:
+    gem 'activerecord-session_store'
+  activerecord-session_store must be *before* limited_sessions in your Gemfile
+  in order for limited_sessions to auto-detect it.
+
+  For Rails 3, use limited_sessions v3.x.x:
+    gem 'limited_sessions', '~> 3.0'
 
 
 Upgrading from previous versions:
-  Both initialization and configuration options have changed. See the
-  Configuration section below. 
-  
-  Note that all support for IP address restrictions has been removed. IPv4/IPv6
-  dual-stack environments have demonstrated a number of real-world issues, 
-  namely user HTTP traffic bouncing between IPv4 and IPv6 resulting in chronic
-  session resets. Additionally, homes and offices increasingly have two or more
-  ISPs, not to mention mobile devices bouncing between WiFi and 3G/4G networks.
-  These scenarios also cause frequent IP address changes.
+  Other than possibly requiring the activerecord-session_store gem as noted
+  above, no changes are required upgrading from limited_sessions 3.x to 4.0.
+
+  If upgrading from limited_sessions v2.x, please review the upgrade notes from
+  limited_sessions 3.x or build a new configuration using the instructions
+  below.
 
 
 Features:
@@ -50,11 +49,11 @@ Features:
 
   
 Requirements:
-  * Rack and possibly Rails 3
+  * Rack and any Rack-compatible app (including Rails 4)
   * Utilizing Rack's (or Rails') sessions support
   * For ActiveRecord session enhancements:
     * Must be using the standard ActiveRecord::SessionStore
-      (ActionController::Base.session_store = :active_record_store)
+      (ActionDispatch::Session::ActiveRecordStore.session_store = :active_record_store)
     * Ensure your sessions table has an `updated_at` column
     * If using hard session limits, a `created_at` column is needed too
 
@@ -63,28 +62,27 @@ Installation:
   Add this gem to your Gemfile (Rails) or otherwise make it available to your
   app. Then, configure as required.
 
-  gem 'limited_sessions'
+  gem 'limited_sessions', '~> 4.0'
 
 
 Configuration:
   Rack Middleware with Rails
-    1. To either your config/environments/production.rb or your 
-       config/application.rb file (depending on if you want this to apply in
-       production only or also during development), add the following:
+    1. Update your config/initializers/session_store.rb and append the
+       following:
 
        config.middleware.insert_after ActionDispatch::Flash, LimitedSessions::Expiry, \
-         :recent_activity=>2.hours, :max_session=>24.hours
+         recent_activity: 2.hours, max_session: 24.hours
 
     2. Configuration options.
        The example above shows both configuration options. You may include
        both, one, or none.
 
        * Session activity timeout *
-       Example: :recent_activity => 2.hours
+       Example: recent_activity: 2.hours
        By default, the session activity timeout is disabled (nil).
 
        * Maximum session length *
-       Example: :max_session => 24.hours
+       Example: max_session: 24.hours
        By default, the maximum session length is disabled (nil).
 
 
@@ -92,7 +90,7 @@ Configuration:
     1. In your config.ru, add the following *after* the middleware that handles
        your sessions.
 
-       use LimitedSessions::Expiry, :recent_activity=>2.hours, :max_session=>24.hours
+       use LimitedSessions::Expiry, recent_activity: 2.hours, max_session: 24.hours
 
     2. See #2 above, under Rack Middleware with Rails, for Configuration options.       
 
@@ -106,7 +104,7 @@ Configuration:
        config/initializers/session_store.rb to reflect the following:
 
        <YourApp>::Application.config.session_store :active_record_store
-       ActiveRecord::SessionStore.session_class = LimitedSessions::SelfCleaningSession
+       ActionDispatch::Session::ActiveRecordStore.session_class = LimitedSessions::SelfCleaningSession
 
     3. Configuration options.
        Each of the following options should also be added to your initializer
@@ -114,9 +112,9 @@ Configuration:
 
 
        * Self-cleaning *
-       By default, SelfCleaningSession will clean sessions out about every 1000
-       page views. Technically, it's a 1 in 1000 chance on each page. For most
-       sites this is good. Higher traffic sites may want to increase it to 
+       By default, SelfCleaningSession will clean the sessions table about every
+       1000 page views. Technically, it's a 1 in 1000 chance on each page. For
+       most sites this is good. Higher traffic sites may want to increase it to 
        10000 or more. 0 will disable self-cleaning.
 
        LimitedSessions::SelfCleaningSession.self_clean_sessions = 1000
@@ -185,17 +183,47 @@ Other questions:
     triggering the recent activity timeout, after 12 hours their session would
     be reset anyway.
 
+  What are the security implications of using LimitedSessions?
+    LimitedSessions enhances security by reducing risk of session cookie replay
+    attacks. The specifics will depend on what cookie store you're using.
+    
+    For Rails' default cookie store, :max_session / 'created_at' handling is
+    perhaps most valuable as it guarantees an end to the session. Rails' default
+    behavior allows a session to last for an infinite time. If a cookie is
+    somehow exposed, the holder of the cookie has an open-ended session. Note
+    that signing and/or encryption do not mitigate this.
+
+    For any session store that uses a server-side database (AR, memcache, Redis,
+    etc.), at least the user can formally logout and terminate the session.
+    Auto-expiring sessions (memcache, Redis, AR w/SelfCleaningSession, etc.)
+    will also expire if allowed to, but can also be maintained perpetually by
+    ongoing access.
+    
+    Since the cookie store doesn't expire ever, :recent_activity / 'updated_at'
+    addresses this by making sessions expire similarly to if memcache, Redis, or
+    something similar was being used.
+
+    It is recommended to use both halves of LimitedSessions for best security.
+
+  What are the performance implications of using LimitedSessions?
+    The middleware should have minimal impact.
+
+    The AR enhancement should result in an overall net gain in performance as
+    the size of the AR sessions table will be kept to a smaller size. The 1 in
+    1000 hit (or whatever you've configured it to) may be slightly slower while
+    the database cleanup is in progress.
+
   Is the AR enhancement compatible with the legacy 'sessid' column?
     No. Please rename that column to 'session_id'.
 
 
 Other Notes:
-  I'm sure there are better ways to do some of what's here, but this seems to
-  work. This version has been tested on Rack 1.4, Rails 3.2, PostgreSQL 9.1,
-  and Redis 2.2 (via the redis and redis-session-store gems). Other databases
-  and session stores should work, but if you find a bug, I'd love to hear about
-  it. Likewise, give me a shout if you have a suggestion or just want to tell
-  me that it works. Thanks for checking limited_sessions out!
+  This version has been tested on Rack 1.5 and Rails 4.0. It should be
+  compatible with a broad spectrum of data and session stores. If you find a
+  bug, I'd love to hear about it -- preferably via a new issue on GitHub (bonus
+  points for a pull request). Likewise, give me a shout if you have a suggestion
+  or just want to tell me that it works. Thanks for checking limited_sessions
+  out!
   
       --t (tm@iprog.com; http://iprog.com/)
 
