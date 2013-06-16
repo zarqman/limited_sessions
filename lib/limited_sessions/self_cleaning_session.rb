@@ -2,7 +2,7 @@
 # (c) 2007-2012 t.e.morgan
 # Made available under the MIT license
 
-# This is the Rails 3.x version; it is /not/ compatible with Rails 2.x.
+# This is the Rails 4.x version.
 
 module LimitedSessions
   class SelfCleaningSession < ActiveRecord::SessionStore::Session
