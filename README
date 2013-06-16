@@ -187,11 +187,11 @@ Other questions:
     LimitedSessions enhances security by reducing risk of session cookie replay
     attacks. The specifics will depend on what cookie store you're using.
     
-    For Rails' default cookie store, :max_session / 'created_at' handling is
-    perhaps most valuable as it guarantees an end to the session. Rails' default
-    behavior allows a session to last for an infinite time. If a cookie is
-    somehow exposed, the holder of the cookie has an open-ended session. Note
-    that signing and/or encryption do not mitigate this.
+    For Rails' default cookie store, :max_session handling is perhaps most
+    valuable as it guarantees an end to the session. Rails' default behavior
+    allows a session to last for an infinite time. If a cookie is somehow
+    exposed, the holder of the cookie has an open-ended session. Note that
+    signing and/or encryption do not mitigate this.
 
     For any session store that uses a server-side database (AR, memcache, Redis,
     etc.), at least the user can formally logout and terminate the session.
@@ -199,9 +199,9 @@ Other questions:
     will also expire if allowed to, but can also be maintained perpetually by
     ongoing access.
     
-    Since the cookie store doesn't expire ever, :recent_activity / 'updated_at'
-    addresses this by making sessions expire similarly to if memcache, Redis, or
-    something similar was being used.
+    Since the cookie store doesn't expire ever, :recent_activity addresses this
+    by making sessions expire similarly to if memcache, Redis, or something
+    similar was being used.
 
     It is recommended to use both halves of LimitedSessions for best security.
 
