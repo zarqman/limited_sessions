@@ -8,7 +8,7 @@ module LimitedSessions
   class SelfCleaningSession < ActiveRecord::SessionStore::Session
 
     # disable short circuit by Dirty module; ensures :updated_at is kept updated
-    self.partial_updates = false
+    self.partial_writes = false
 
     self.table_name = 'sessions'
 
