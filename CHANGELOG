@@ -1,3 +1,7 @@
+* 2016-feb-12 - v4.1.0
+
+  - Support Rails 5.0 & Rack 2.0
+
 * 2013-dec-14 - v4.0.1
 
   - Fix deprecation warning
