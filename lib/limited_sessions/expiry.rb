@@ -1,9 +1,9 @@
 # LimitedSessions
-# (c) 2007-2013 t.e.morgan
+# (c) 2007-2017 t.e.morgan
 # Made available under the MIT license
 
-# This version is compatible with Rack 1.4-1.5 (possibly earlier; untested).
-# Correspondingly, it is compatible with Rails 3.x-4.x.
+# This version is compatible with Rack 1.4-2.0 (possibly earlier; untested).
+# Correspondingly, it is compatible with Rails 3.x-5.x.
 
 module LimitedSessions
   # Rack middleware that should be installed *after* the session handling middleware

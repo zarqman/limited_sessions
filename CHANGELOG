@@ -1,3 +1,9 @@
+* 2017-may-22 - v4.2.0
+
+  - Fixed ActiveRecord session cleanup on Rails 5.1
+  - Prevent ActiveRecord session cleanup from possibly running more often than
+    configured due to Rails loading sessions more than once per request.
+
 * 2016-feb-12 - v4.1.0
 
   - Support Rails 5.0 & Rack 2.0

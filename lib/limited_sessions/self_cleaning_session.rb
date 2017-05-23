@@ -1,8 +1,8 @@
 # LimitedSessions
-# (c) 2007-2012 t.e.morgan
+# (c) 2007-2017 t.e.morgan
 # Made available under the MIT license
 
-# This is the Rails 4.x version.
+# This is the Rails 4-5.x version.
 
 module LimitedSessions
   class SelfCleaningSession < ActiveRecord::SessionStore::Session
@@ -35,13 +35,15 @@ module LimitedSessions
       private
       def consider_self_clean
         return if self_clean_sessions == 0
+        return if defined?(@@last_check) && @@last_check == Time.now.to_i
         if rand(self_clean_sessions) == 0
+          @@last_check = Time.now.to_i
           # logger.info "SelfCleaningSession :: scrubbing expired sessions"
           look_back_recent = recent_activity || 1.week
           if max_session
-            delete_all ['updated_at < ? OR created_at < ?', Time.current - look_back_recent, Time.current - max_session]
+            self.where('updated_at < ? OR created_at < ?', Time.current - look_back_recent, Time.current - max_session).delete_all
           elsif columns_hash['updated_at']
-            delete_all ['updated_at < ?', Time.current - look_back_recent]
+            self.where('updated_at < ?', Time.current - look_back_recent).delete_all
           else
             # logger.warning "WARNING: Unable to self-clean Sessions table; updated_at column is missing"
             self.self_clean_sessions = 0

@@ -1,6 +1,6 @@
 LimitedSessions
 ===============
-Copyright 2007-2013 t.e.morgan.
+Copyright 2007-2017 t.e.morgan.
 License: MIT
 
 Updates/info: http://iprog.com/projects#limited_sessions
@@ -10,23 +10,27 @@ Contact: tm@iprog.com
 
 LimitedSessions provides two distinct features, each in a separate part:
   * Rack-compatible middleware that expires sessions based on inactivity or
-    maximum session length. This works with Rails 4 just fine.
-  * Rails 4 extension to the (now separate) ActiveRecord Session Store to
+    maximum session length. The middleware supports any session storage type,
+    including cookies, Redis, ActiveRecord, etc.
+  * Rails 4+ extension to the (now separate) ActiveRecord Session Store to
     auto-cleanup stale session records.
 
 
 Notes on Rails and Rack versions:
   The middleware should be compatible with any framework using a recent
-  version of Rack. It was tested with Rack 1.5 and Rails 4.0.
+  version of Rack. It was tested with Rack 1.5 on Rails 4.2 and Rack 2.0 on
+  Rails 5.0 and 5.1.
   
-  The ActiveRecord Session Store extension requires Rails 4 and the now
+  The ActiveRecord Session Store extension requires Rails 4+ and the now
   separate activerecord-session_store gem:
     gem 'activerecord-session_store'
   activerecord-session_store must be *before* limited_sessions in your Gemfile
   in order for limited_sessions to auto-detect it.
 
-  For Rails 3, use limited_sessions v3.x.x:
-    gem 'limited_sessions', '~> 3.0'
+  The extension has been tested with the following combinations:
+  * Rails 4.2 + activerecord-session_store 0.1.2
+  * Rails 5.0 + activerecord-session_store 1.0.0
+  * Rails 5.1 + activerecord-session_store 1.1.0
 
 
 Upgrading from previous versions:
@@ -49,7 +53,7 @@ Features:
 
   
 Requirements:
-  * Rack and any Rack-compatible app (including Rails 4)
+  * Rack and any Rack-compatible app (including Rails 4 or 5)
   * Utilizing Rack's (or Rails') sessions support
   * For ActiveRecord session enhancements:
     * Must be using the standard ActiveRecord::SessionStore
@@ -218,12 +222,11 @@ Other questions:
 
 
 Other Notes:
-  This version has been tested on Rack 1.5 and Rails 4.0. It should be
+  This version has been tested on Rack 1.5-2.0 and Rails 4.2-5.1. It should be
   compatible with a broad spectrum of data and session stores. If you find a
   bug, I'd love to hear about it -- preferably via a new issue on GitHub (bonus
   points for a pull request). Likewise, give me a shout if you have a suggestion
   or just want to tell me that it works. Thanks for checking limited_sessions
   out!
   
-      --t (tm@iprog.com; http://iprog.com/)
-
+      --t (tm@iprog.com; https://iprog.com/)
