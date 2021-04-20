@@ -1,7 +1,3 @@
-# LimitedSessions
-# (c) 2007-2013 t.e.morgan
-# Made available under the MIT license
-
 module LimitedSessions
 end
 

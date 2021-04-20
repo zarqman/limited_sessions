@@ -1,9 +1,3 @@
-# LimitedSessions
-# (c) 2007-2017 t.e.morgan
-# Made available under the MIT license
-
-# This is the Rails 4-5.x version.
-
 module LimitedSessions
   class SelfCleaningSession < ActiveRecord::SessionStore::Session
 

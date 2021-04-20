@@ -1,6 +1,8 @@
 .bundle/
+.DS_Store
 log/*.log
 pkg/
+.ruby-*
 test/dummy/db/*.sqlite3
 test/dummy/log/*.log
 test/dummy/tmp/
