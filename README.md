@@ -193,7 +193,7 @@ gem 'limited_sessions', '~> 5'
 
 ## Contributing
 
-1. Fork it ( https://github.com/zarqman/smart_assets/fork )
+1. Fork it ( https://github.com/zarqman/limited_sessions/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
