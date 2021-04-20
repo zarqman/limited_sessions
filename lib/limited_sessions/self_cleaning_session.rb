@@ -29,7 +29,7 @@ module LimitedSessions
       # If this is a problem, use a migration and rename the column.
       def find_by_session_id(session_id)
         consider_self_clean
-        active_session.current_session.where(:session_id=>session_id).first
+        active_session.current_session.where(session_id: session_id).first
       end
 
       private

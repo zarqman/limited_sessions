@@ -9,8 +9,8 @@ module LimitedSessions
   # Rack middleware that should be installed *after* the session handling middleware
   class Expiry
     DEFAULT_OPTIONS = {
-      :recent_activity => nil,  # eg: 2.hours
-      :max_session => nil       # eg: 24.hours
+      recent_activity: nil,  # eg: 2.hours
+      max_session: nil       # eg: 24.hours
     }
 
     def initialize(app, options={})

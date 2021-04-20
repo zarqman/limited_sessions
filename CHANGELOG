@@ -1,3 +1,8 @@
+* 2021-apr-20 - v5.0.0
+
+  - Drop support for Rack <= 2.0.8 and Rails < 5.2
+  - Update for new rubies
+
 * 2017-may-22 - v4.2.0
 
   - Fixed ActiveRecord session cleanup on Rails 5.1
