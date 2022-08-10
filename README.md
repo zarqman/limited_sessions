@@ -31,7 +31,7 @@ LimitedSessions provides two distinct features, each in a separate part:
 
 ## Compatibility
 
-The middleware should be compatible with any framework using a recent version of Rack. It has been tested with Rack 2.x and Rails 5.2-6.1.
+The middleware should be compatible with any framework using a recent version of Rack. It has been tested with Rack 2.x and Rails 5.2-7.0.
 
 The optional ActiveRecord Session Store extension requires Rails.
 
@@ -160,7 +160,7 @@ gem 'limited_sessions', '~> 5'
 
   The middleware adds one or two keys to the session data: `:last_visit` and/or `:first_visit`.
 
-  The AR enhancement uses `updated_a`t and possibly `created_at`.
+  The AR enhancement uses `updated_at` and possibly `created_at`.
 
 * How is this different from using the session cookie's own expires= value?
 

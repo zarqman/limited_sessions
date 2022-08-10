@@ -11,7 +11,11 @@ Gem::Specification.new do |s|
   s.email       = ["tm@iprog.com"]
   s.homepage    = "https://iprog.com/projects#limited_sessions"
   s.summary     = "Server-side session expiry via either Rack Middleware or ActiveRecord extension"
-  s.description = "LimitedSessions provides two core features to handle cookie-based session expiry: 1) Rack Middleware for most session stores and 2) an ActiveRecord extension for AR-based session stores. Sessions can be expired on inactivity and/or overall session length."
+  s.description = "LimitedSessions provides two core features to handle cookie-based session expiry: 1) Rack Middleware for most session stores and 2) an ActiveRecord extension for AR-based session stores. Sessions can be expired on inactivity and/or overall session length. Works with and without Rails."
+  s.license     = 'MIT'
+  s.metadata = {
+    'source_code_uri' => 'https://github.com/zarqman/limited_sessions',
+  }
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG"]
   s.test_files = Dir["test/**/*"]
@@ -19,5 +23,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'rack', '>= 2.0.9', '< 3'
 
   s.add_development_dependency "sqlite3"
-  s.add_development_dependency 'rails', '>= 5.2', '< 6.2'
+  s.add_development_dependency 'rails', '>= 5.2', '< 7.1'
 end

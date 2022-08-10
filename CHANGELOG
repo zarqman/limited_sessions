@@ -1,3 +1,7 @@
+* 2022-aug-10 - v5.0.1
+
+  - Fix for deprecation warning in Rails 7
+
 * 2021-apr-20 - v5.0.0
 
   - Drop support for Rack <= 2.0.8 and Rails < 5.2
