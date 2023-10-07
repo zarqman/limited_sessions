@@ -1,3 +1,7 @@
+* 2023-oct-07 - v5.0.2
+
+  - Support Rails 7.1 & Rack 3
+
 * 2022-aug-10 - v5.0.1
 
   - Fix for deprecation warning in Rails 7
@@ -27,7 +31,7 @@
   - v4.0.0 - Rails 4 compatibility. Use v3.x.x for Rails 3 apps.
   - For non-ActiveRecord session stores, no change is required from the
     previous version.
-  - For ActiveRecord session stores, you must add the 
+  - For ActiveRecord session stores, you must add the
     'activerecord-session_store' gem to your Gemfile and it must be
     above limited_sessions so that it will be auto-detected properly.
     This is the only change required.
@@ -41,7 +45,7 @@
 
   - LimitedSessions has been broken up into two parts:
     - Rack-compatible middleware that handles session time limits. This
-      *should* work for all session stores. Just requires Rack, not 
+      *should* work for all session stores. Just requires Rack, not
       necessarily Rails.
     - Rails 3 specific enhancement to the ActiveRecord Session Store
       that also cleans up stale session records.
@@ -54,13 +58,13 @@
 * 2010-jul-20 - IPv6, replay attack mitigation, more non-AR support
 
   - IPv6 now works for subnet matching.
-  - New options to configure the allowed subnet size (both IPv4 and 
+  - New options to configure the allowed subnet size (both IPv4 and
     IPv6) added.
   - Plugin now enhances reset_session to clear old session data from
-    the DB; this prevents session_id replay attacks when using 
+    the DB; this prevents session_id replay attacks when using
     DB-backed session storage.
   - Session activity and hard limits now work with non-ActiveRecord
-    session stores. Configuration is done differently depending on 
+    session stores. Configuration is done differently depending on
     which session store is in use.
 
 * 2009-apr-22 - update to support rails 2.3
@@ -68,13 +72,13 @@
   - Rails 2.3 changed the internal session code substantially. This new
     version now supports rails 2.3. Note that is no longer supports any
     version of rails prior to 2.3 -- see the README for where to find
-    an older version of this plugin for rails 2.2 and earlier. 
+    an older version of this plugin for rails 2.2 and earlier.
   - CONFIGURATION OPTIONS HAVE CHANGED. This is required by the new
     support for rails 2.3. See the README for more information.
 
-* 2008-jul-23 - update to improve rails 2.1 compatibility 
-  
+* 2008-jul-23 - update to improve rails 2.1 compatibility
+
   - disable partial-updates for the session table
     (thanks to eilonon erkki for bringing the problem to my attention)
-  
+
 * 2007-sep-06 - initial release

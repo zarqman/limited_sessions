@@ -31,7 +31,7 @@ LimitedSessions provides two distinct features, each in a separate part:
 
 ## Compatibility
 
-The middleware should be compatible with any framework using a recent version of Rack. It has been tested with Rack 2.x and Rails 5.2-7.0.
+The middleware should be compatible with any framework using a recent version of Rack. It has been tested with Rack 2-3 and Rails 5.2-7.1.
 
 The optional ActiveRecord Session Store extension requires Rails.
 
