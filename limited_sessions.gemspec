@@ -17,11 +17,11 @@ Gem::Specification.new do |s|
     'source_code_uri' => 'https://github.com/zarqman/limited_sessions',
   }
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE.txt", "Rakefile", "README.md", "CHANGELOG"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency 'rack', '>= 2.0.9', '< 4'
 
-  s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'sqlite3', '~> 1.4'
   s.add_development_dependency 'rails', '>= 5.2', '< 7.2'
 end
