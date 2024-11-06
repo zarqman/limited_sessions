@@ -1,3 +1,7 @@
+* 2024-nov-06 - v5.0.3
+
+  - Support Rails 7.2
+
 * 2023-oct-07 - v5.0.2
 
   - Support Rails 7.1 & Rack 3
