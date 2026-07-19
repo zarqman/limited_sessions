@@ -25,5 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rack', '>= 2.0.9', '< 4'
 
   spec.add_development_dependency 'sqlite3'
-  spec.add_development_dependency 'rails', '>= 5.2', '< 8.1'
+  spec.add_development_dependency 'rails', '>= 5.2'
 end
